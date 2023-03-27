@@ -1,70 +1,47 @@
-/* Set the background color of the body to light gray */
 body {
-    background-color: #f8f9fa;
-  }
-  
-  /* Set the background color of the login form container to white */
-  .container-fluid {
-    background-color: #ffffff;
-    border-radius: 5px;
-    box-shadow: 0 5px 10px rgba(0,0,0,0.3);
-  }
-  
-  /* Set the margin and padding for the login form container */
-  .h-custom {
-    margin-top: 3rem;
-    margin-bottom: 3rem;
-    padding: 2rem;
-  }
-  
-  /* Set the width of the image in the login form */
-  .img-fluid {
-    width: 80%;
-    height: auto;
-    margin: 0 auto;
-    display: block;
-  }
-  
-  /* Set the font size and color of the "Sign in with" text */
-  .lead {
-    font-size: 1.5rem;
-    color: #343a40;
-  }
-  
-  /* Set the color of the social media buttons */
-  .btn-primary {
-    background-color: #3b5998;
-    border-color: #3b5998;
-  }
-  
-  /* Set the color of the divider text */
-  .divider p {
-    color: #6c757d;
-  }
-  
-  /* Set the font size and color of the "Forgot password?" link */
-  a.text-body {
-    font-size: 0.9rem;
-    color: #6c757d;
-  }
-  
-  /* Set the color and padding of the login button */
-  .btn-primary.btn-lg {
-    background-color: #007bff;
-    border-color: #007bff;
-    padding-left: 2.5rem;
-    padding-right: 2.5rem;
-  }
-  
-  /* Set the font size and color of the "Don't have an account?" text */
-  .small {
-    font-size: 0.85rem;
-    color: #6c757d;
-  }
-  
-  /* Set the color and font size of the footer text */
-  .bg-primary {
-    color: #ffffff;
-    font-size: 0.9rem;
-  }
-  
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+}
+
+h1 {
+  text-align: center;
+  margin-top: 50px;
+}
+
+form {
+  width: 400px;
+  margin: 50px auto;
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 20px;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 3px;
+  border: 1px solid #ccc;
+}
+
+input[type="submit"] {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+input[type="submit"]:hover {
+  background-color: #0069d9;
+}
