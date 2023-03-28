@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Registration Page</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<h1>Registration Page</h1>
+	<form id="registration-form" action="/user/register" method="POST">
+
+		<label for="firstName">First Name:</label>
+		<input type="text" id="firstName" name="firstName" required><br><br>
+
+		<label for="lastName">Last Name:</label>
+		<input type="text" id="lastName" name="lastName" required><br><br>
+
+		<label for="email">Email:</label>
+		<input type="email" id="email" name="email" required><br><br>
+
+		<label for="password">Password:</label>
+		<input type="password" id="password" name="password" required><br><br>
+
+		<input type="submit" value="Register">
+	</form>
+
+  <script>
+	const form = document.querySelector('#registration-form');
+
+form.addEventListener('submit', async (event) => {
+  event.preventDefault();
+
+  const firstName = form.elements.firstName.value;
+  const lastName = form.elements.lastName.value;
+  const email = form.elements.email.value;
+  const password = form.elements.password.value;
+
+  const user = {
+    firstName,
+    lastName,
+    email,
+    password
+  };
+
+  try {
+    const response = await fetch('http://localhost:8080/user/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(user)
+    });
+
+    if (response.ok) {
+      const userDTO = await response.json();
+      console.log('User registered:', userDTO);
+      window.location.href = 'tasks.html?id=' + userDTO.id;
+    } else if (response.status === 409) {
+      console.log('User already exists');
+      // handle user conflict error
+    } else {
+      console.error('Failed to register user');
+      // handle other errors
+    }
+  } catch (error) {
+    console.error('Failed to register user:', error);
+    // handle network errors
+  }
+});
+
+	</script>
+</body>
+</html>

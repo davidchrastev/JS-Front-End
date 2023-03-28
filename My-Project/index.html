@@ -1,72 +1,47 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title>Registration Page</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-	<h1>Registration Page</h1>
-	<form id="registration-form" action="/user/register" method="POST">
+  <head>
+    <meta charset="utf-8">
+    <title>Welcome to My Task Site</title>
+  </head>
+  <style>
+    body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
 
-		<label for="firstName">First Name:</label>
-		<input type="text" id="firstName" name="firstName" required><br><br>
+.container {
+  width: 80%;
+  margin: auto;
+  text-align: center;
+}
 
-		<label for="lastName">Last Name:</label>
-		<input type="text" id="lastName" name="lastName" required><br><br>
+h1 {
+  font-size: 3rem;
+  margin-top: 3rem;
+}
 
-		<label for="email">Email:</label>
-		<input type="email" id="email" name="email" required><br><br>
+.btn {
+  display: inline-block;
+  padding: 1rem 2rem;
+  margin-top: 2rem;
+  font-size: 1.2rem;
+  color: #fff;
+  background-color: #007bff;
+  border-radius: 5px;
+  cursor: pointer;
+}
 
-		<label for="password">Password:</label>
-		<input type="password" id="password" name="password" required><br><br>
+.btn:hover {
+  background-color: #0056b3;
+}
 
-		<input type="submit" value="Register">
-	</form>
-
-  <script>
-	const form = document.querySelector('#registration-form');
-
-form.addEventListener('submit', async (event) => {
-  event.preventDefault();
-
-  const firstName = form.elements.firstName.value;
-  const lastName = form.elements.lastName.value;
-  const email = form.elements.email.value;
-  const password = form.elements.password.value;
-
-  const user = {
-    firstName,
-    lastName,
-    email,
-    password
-  };
-
-  try {
-    const response = await fetch('http://localhost:8080/user/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(user)
-    });
-
-    if (response.ok) {
-      const userDTO = await response.json();
-      console.log('User registered:', userDTO);
-      window.location.href = 'success.html?id=' + userDTO.id;
-    } else if (response.status === 409) {
-      console.log('User already exists');
-      // handle user conflict error
-    } else {
-      console.error('Failed to register user');
-      // handle other errors
-    }
-  } catch (error) {
-    console.error('Failed to register user:', error);
-    // handle network errors
-  }
-});
-
-	</script>
-</body>
+  </style>
+  <body>
+    <h1>Hello!</h1>
+    <p>Welcome to My Task Site.</p>
+    <button onclick="window.location.href='login.html'">Login</button>
+    <button onclick="window.location.href='register.html'">Register</button>
+  </body>
 </html>

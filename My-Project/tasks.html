@@ -3,7 +3,6 @@
   <head>
     <meta charset="UTF-8" />
     <title>To Do List</title>
-    <link rel="stylesheet" href="successStyle.css">
   </head>
   <body>
     <h1>Welcome to your To Do List!</h1>
@@ -27,9 +26,19 @@
         if (tasksResponse.ok) {
           const userDTO = await tasksResponse.json();
           const tasks = userDTO.tasks;
-          console.log("Tasks:", tasks);
+          const taskList = document.getElementById("task-list");
           tasks.forEach((task) => {
-            // display each task
+            const displayTasks = document.getElementById("tasks");
+            if (displayTasks) {
+              const tasksList = document.getElementById("tasks");
+              const taskListItem = document.createElement("li");
+              taskListItem.innerHTML = `
+              <input type="checkbox" id="task-${task.id}">
+              <label for="task-${task.id}">${task.description}</label>
+              <button class="delete-button" data-task-id="${task.id}">Delete</button>
+            `;
+              tasksList.appendChild(taskListItem);
+            }
           });
         } else {
           console.log("Failed to load tasks:", tasksResponse.status);
