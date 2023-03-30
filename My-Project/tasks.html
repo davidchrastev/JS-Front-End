@@ -77,24 +77,26 @@
           });
       });
 
-      // Handle deleting a task
       const tasksList = document.getElementById("tasks");
       tasksList.addEventListener("click", (event) => {
         if (event.target.classList.contains("delete-button")) {
           const taskId = event.target.getAttribute("data-task-id");
-          fetch(`/tasks/tasks/delete`, {
-            method: "DELETE",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ taskId }),
-          })
-            .then((response) => response.json())
-            .then((data) => {
+
+          const xhr = new XMLHttpRequest();
+          xhr.open("DELETE", "http://localhost:8080/tasks/tasks/delete", true);
+          xhr.setRequestHeader("Content-Type", "application/json");
+          xhr.onreadystatechange = function () {
+            if (
+              this.readyState === XMLHttpRequest.DONE &&
+              this.status === 200
+            ) {
               const taskListItem = event.target.closest("li");
               taskListItem.remove();
-            })
-            .catch((error) => {
-              console.error("Failed to delete task:", error);
-            });
+            } else if (this.readyState === XMLHttpRequest.DONE) {
+              console.error("Failed to delete task:", xhr.status);
+            }
+          };
+          xhr.send(JSON.stringify({ taskId }));
         }
       });
     </script>
