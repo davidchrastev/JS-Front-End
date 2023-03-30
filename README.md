@@ -1,3 +1,3 @@
 # JS-Front-End
-Leaning Java Script
+Learning Java Script
 
