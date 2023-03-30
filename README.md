@@ -1,7 +1,6 @@
 # JS-Front-End
 Leaning Java Script
 
-<body>
     <table border="1" id="customers">
       <thead>
         <tr>
@@ -54,5 +53,4 @@ Leaning Java Script
         result.textContent = "Not found.";
       }
     </script>
-  </body>
 
