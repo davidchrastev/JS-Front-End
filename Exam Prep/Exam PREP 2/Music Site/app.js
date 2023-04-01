@@ -1,24 +1,26 @@
 window.addEventListener("load", solve);
-
 // Always use array from to transform a collection -> querySelectorAll, children
 
 function solve() {
     let totalLikes = 0;
-
+    const transition = {
+        genre: null,
+        name: null,
+        author: null,
+        date: null,
+    }
     const inputDOMSelectors = {
         genre: document.querySelector('input[name="genre"]'),
         name: document.querySelector('input[name="name"]'),
         author: document.querySelector('input[name="author"]'),
         date: document.querySelector('input[name="date"]'),
     };
-
     const otherDOMSelectors = {
         addBtn: document.getElementById('add-btn'),
         allHitsContainer: document.querySelector(' .all-hits-container'),
         savedContainer: document.querySelector(' .saved-container'),
         totalLikesContainer: document.querySelector(' .likes > p'),
     }
-
     otherDOMSelectors.addBtn.addEventListener('click', addSongHandler);
 
     function addSongHandler(event) {
@@ -44,20 +46,22 @@ function solve() {
         saveBtn.addEventListener('click', saveSongHandler);
         likeBtn.addEventListener('click', likeSongHandler);
         deleteBtn.addEventListener('click', deleteSongHandler);
+        transition.genre = inputDOMSelectors.genre.value;
+        transition.name = inputDOMSelectors.name.value;
+        transition.date = inputDOMSelectors.date.value;
+        transition.author = inputDOMSelectors.author.value;
         clearInput();
-    }
 
+    }
     function saveSongHandler() {
-        this.parentNode.remove();
-        const savedSong = createElement('div', otherDOMSelectors.savedContainer, '', ['hits-info']);
-        const { genre, name, author, date} = inputDOMSelectors;
-        createElement('img', savedSong, null, null, null, {src: './static/img/img.png'});
-        createElement('h2', savedSong, `Genre: ${genre.value}`);
-        createElement('h2', savedSong, `Name: ${name.value}`);
-        createElement('h2', savedSong, `Author: ${author.value}`);
-        createElement('h3', savedSong, `Date: ${date.value}`);
-        const deleteBtn = createElement('button', savedSong, 'Delete', ['delete-btn']);
-        deleteBtn.addEventListener('click', deleteSongHandler);
+        const songRef = this.parentNode;
+        const saveBtn = songRef.querySelector('.save-btn');
+        const likeBtn = songRef.querySelector('.like-btn');
+        otherDOMSelectors.savedContainer
+            .appendChild(songRef);
+        saveBtn.remove();
+        likeBtn.remove();
+
     }
     function deleteSongHandler() {
         this.parentNode.remove();
@@ -70,11 +74,9 @@ function solve() {
     function clearInput() {
         Object.values(inputDOMSelectors)
             .forEach((input) => {
-                input = '';
+                input.value = '';
             });
     }
-
-
     function createElement(type, parentNode, content, classes, id, attributes, useInnerHtml) {
         const htmlElement = document.createElement(type);
 
