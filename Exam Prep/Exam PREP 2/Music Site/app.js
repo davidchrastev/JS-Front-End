@@ -32,17 +32,47 @@ function solve() {
         }
 
         const songContainer = createElement('div', otherDOMSelectors.allHitsContainer, '', ['hits-info']);
-
-
-
-
+        const { genre, name, author, date} = inputDOMSelectors;
+        createElement('img', songContainer, null, null, null, {src: './static/img/img.png'});
+        createElement('h2', songContainer, `Genre: ${genre.value}`);
+        createElement('h2', songContainer, `Name: ${name.value}`);
+        createElement('h2', songContainer, `Author: ${author.value}`);
+        createElement('h3', songContainer, `Date: ${date.value}`);
+        const saveBtn = createElement('button', songContainer, 'Save song', ['save-btn']);
+        const likeBtn = createElement('button', songContainer, 'Like song', ['like-btn']);
+        const deleteBtn = createElement('button', songContainer, 'Delete', ['delete-btn']);
+        saveBtn.addEventListener('click', saveSongHandler);
+        likeBtn.addEventListener('click', likeSongHandler);
+        deleteBtn.addEventListener('click', deleteSongHandler);
+        clearInput();
     }
 
-
-
-
-
-
+    function saveSongHandler() {
+        this.parentNode.remove();
+        const savedSong = createElement('div', otherDOMSelectors.savedContainer, '', ['hits-info']);
+        const { genre, name, author, date} = inputDOMSelectors;
+        createElement('img', savedSong, null, null, null, {src: './static/img/img.png'});
+        createElement('h2', savedSong, `Genre: ${genre.value}`);
+        createElement('h2', savedSong, `Name: ${name.value}`);
+        createElement('h2', savedSong, `Author: ${author.value}`);
+        createElement('h3', savedSong, `Date: ${date.value}`);
+        const deleteBtn = createElement('button', savedSong, 'Delete', ['delete-btn']);
+        deleteBtn.addEventListener('click', deleteSongHandler);
+    }
+    function deleteSongHandler() {
+        this.parentNode.remove();
+    }
+    function likeSongHandler() {
+        this.setAttribute('disabled', true);
+        totalLikes++;
+        otherDOMSelectors.totalLikesContainer.textContent = `Total Likes: ${totalLikes}`
+    }
+    function clearInput() {
+        Object.values(inputDOMSelectors)
+            .forEach((input) => {
+                input = '';
+            });
+    }
 
 
     function createElement(type, parentNode, content, classes, id, attributes, useInnerHtml) {
