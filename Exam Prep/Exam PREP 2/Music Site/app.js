@@ -1,6 +1,5 @@
 window.addEventListener("load", solve);
 // Always use array from to transform a collection -> querySelectorAll, children
-
 function solve() {
     let totalLikes = 0;
     const transition = {

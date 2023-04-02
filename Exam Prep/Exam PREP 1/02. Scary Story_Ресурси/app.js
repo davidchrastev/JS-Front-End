@@ -3,16 +3,16 @@ window.addEventListener("load", solve);
 // Always use array from to transform a collection -> querySelectorAll, children
 
 function solve() {
-  const storyState = {
+
+  const formInput = {
     firstName: null,
     lastName: null,
     age: null,
     title: null,
     genre: null,
     story: null,
-  };
-
-  const inputDOMSelectors = {
+  }
+  const formSelectors = {
     firstName: document.getElementById('first-name'),
     lastName: document.getElementById('last-name'),
     age: document.getElementById('age'),
@@ -20,75 +20,69 @@ function solve() {
     genre: document.getElementById('genre'),
     story: document.getElementById('story'),
   };
+  const publishBtn = document.getElementById('form-btn');
+  const parentOfStory = document.getElementById('preview-list');
 
-  const otherDOMSelectors = {
-    publishBtn: document.getElementById('form-btn'),
-    previewList: document.getElementById('preview-list'),
-    mainContainer: document.getElementById('main'),
-  };
+  publishBtn.addEventListener('click', publishHandler);
+  function publishHandler(event) {
+    event.preventDefault();
+    let allInputsAreValid = Object.values(formSelectors)
+        .every((input) => input.value !== '');
 
-  otherDOMSelectors.publishBtn.addEventListener('click', publishStoryHandler);
-
-  function publishStoryHandler() {
-    const allFieldsHaveValue = Object.values(inputDOMSelectors)
-      .every((input) => input.value !== '');
-    if(!allFieldsHaveValue) {
+    if (!allInputsAreValid) {
       return;
     }
+    const storyInfo = createElement('li', parentOfStory, null, ['story-info']);
+    const article = createElement('article', storyInfo);
 
-    const { firstName, lastName, age, title, genre, story } = inputDOMSelectors;
-    const li = createElement('li', otherDOMSelectors.previewList, null, ['story-info']);
-    const article = createElement('article', li);
-    createElement('h4', article, `Name: ${firstName.value} ${lastName.value}`);
-    createElement('p', article, `Age: ${age.value}`);
-    createElement('p', article, `Title: ${title.value}`);
-    createElement('p', article, `Genre: ${genre.value}`);
-    createElement('p', article, story.value);
-    const saveBtn = createElement('button', li, 'Save Story', ['save-btn']);
-    const editBtn = createElement('button', li, 'Edit Story', ['edit-btn']);
-    const delBtn = createElement('button', li, 'Delete Story', ['delete-btn']);
+    createElement('h4', article, `Name: ${formSelectors.firstName.value} ${formSelectors.lastName.value}`);
+    createElement('p', article, `Age: ${formSelectors.age.value}`);
+    createElement('p', article, `Title: ${formSelectors.title.value}`);
+    createElement('p', article, `Genre:  ${formSelectors.genre.value}`);
+    createElement('p', article, formSelectors.story.value);
+
+    for (const formSelectorsKey in formSelectors) {
+        formInput[formSelectorsKey] = formSelectors[formSelectorsKey].value;
+    }
+
+
+    const saveBtn = createElement('button', storyInfo, 'Save Story', ['save-btn']);
+    const editBtn = createElement('button', storyInfo, 'Edit Story', ['edit-btn']);
+    const deleteBtn = createElement('button', storyInfo, 'Delete Story', ['delete-btn']);
 
     editBtn.addEventListener('click', editStoryHandler);
-    delBtn.addEventListener('click', deleteStoryHandler);
-    saveBtn.addEventListener('click', saveStoryHandler);
+    deleteBtn.addEventListener('click', deleteHandler);
+    saveBtn.addEventListener('click', saveHandler);
 
-    for (const key in inputDOMSelectors) {
-      storyState[key] = inputDOMSelectors[key].value;
-    }
-
-    clearAllInputs();
-    otherDOMSelectors.publishBtn.setAttribute('disabled', true);
+    clearInput();
+    this.setAttribute('disabled', true);
   }
-
   function editStoryHandler() {
-    for (const key in inputDOMSelectors) {
-      inputDOMSelectors[key].value = storyState[key];
-    }
-
-    otherDOMSelectors.publishBtn.removeAttribute('disabled');
-    otherDOMSelectors.previewList.innerHTML = '';
-    createElement('h3', otherDOMSelectors.previewList, 'Preview');
+    this.parentNode.remove();
+    formSelectors.firstName.value = formInput.firstName;
+    formSelectors.lastName.value = formInput.lastName;
+    formSelectors.title.value = formInput.title;
+    formSelectors.age.value = formInput.age;
+    formSelectors.genre.value = formInput.genre;
+    formSelectors.story.value = formInput.story;
+    publishBtn.removeAttribute('disabled');
   }
-
-  function deleteStoryHandler() {
-    const liItem = this.parentNode;
-    liItem.remove();
-    otherDOMSelectors.publishBtn.removeAttribute('disabled');
+  function clearInput() {
+    Object.values(formSelectors)
+        .forEach((input) => {
+          input.value = '';
+        });
   }
-
-  function saveStoryHandler() {
-    otherDOMSelectors.mainContainer.innerHTML = '';
-    createElement('h1', otherDOMSelectors.mainContainer, 'Your scary story is saved!');
+  function deleteHandler() {
+    this.parentNode.remove();
+    document.getElementById('form-btn').disabled = false;
   }
-
-  function clearAllInputs() {
-    Object.values(inputDOMSelectors)
-      .forEach((input) => {
-        input.value = '';
-      })
+  function saveHandler() {
+    document.getElementById('main').remove();
+    const bodyClass = document.querySelector('.body');
+    const div = createElement('div', bodyClass, '', null, 'main');
+    createElement('h1', div, 'Your scary story was saved!');
   }
-
-
   function createElement(type, parentNode, content, classes, id, attributes, useInnerHtml) {
     const htmlElement = document.createElement(type);
   
@@ -125,4 +119,5 @@ function solve() {
   
     return htmlElement;
   }
+
 }
