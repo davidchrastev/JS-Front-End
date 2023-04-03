@@ -19,7 +19,6 @@ function solve() {
     const buttons = {
         nextStep: document.getElementById('next-btn'),
     }
-
     buttons.nextStep.addEventListener('click', nextHandler)
     function nextHandler(event) {
         event.preventDefault();
@@ -66,10 +65,10 @@ function solve() {
         cancelBtn.addEventListener('click', cancel);
 
     }
-    function confirm(event) {
+    function confirm() {
         document.getElementById('main').remove();
         const bodyClass = document.getElementById('body');
-        const div = createElement('h1', bodyClass, 'Thank you, have a nice day!', null, 'thank-you');
+        createElement('h1', bodyClass, 'Thank you, have a nice day!', null, 'thank-you');
         const backBtn = createElement('button', bodyClass, 'Back', null, 'back-btn');
 
         backBtn.addEventListener('click', refreshPage);
@@ -78,7 +77,7 @@ function solve() {
     function refreshPage(){
         window.location.reload();
     }
-    function cancel(event) {
+    function cancel() {
         this.parentNode.remove();
         buttons.nextStep.removeAttribute('disabled');
     }
