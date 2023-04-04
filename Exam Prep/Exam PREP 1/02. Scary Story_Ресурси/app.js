@@ -45,7 +45,6 @@ function solve() {
         formInput[formSelectorsKey] = formSelectors[formSelectorsKey].value;
     }
 
-
     const saveBtn = createElement('button', storyInfo, 'Save Story', ['save-btn']);
     const editBtn = createElement('button', storyInfo, 'Edit Story', ['edit-btn']);
     const deleteBtn = createElement('button', storyInfo, 'Delete Story', ['delete-btn']);
@@ -80,7 +79,7 @@ function solve() {
   function saveHandler() {
     document.getElementById('main').remove();
     const bodyClass = document.querySelector('.body');
-    const div = createElement('div', bodyClass, '', null, 'main');
+    const div = createElement('div', bodyClass, '', '[main]');
     createElement('h1', div, 'Your scary story was saved!');
   }
   function createElement(type, parentNode, content, classes, id, attributes, useInnerHtml) {
