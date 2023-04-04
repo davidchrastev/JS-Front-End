@@ -18,6 +18,7 @@ function attachEvents() {
           .then((data) => data.json())
           .then((tasksRes) => {
               const tasks = Object.values(tasksRes)
+              console.log(tasks);
               for (const {_id, name} of tasks) {
                   const li = document.createElement('li')
                   const span = document.createElement('span')
