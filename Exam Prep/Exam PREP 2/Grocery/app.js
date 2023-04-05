@@ -1,62 +1,96 @@
 function attachEvents() {
     const BASE_URL = 'http://localhost:3030/jsonstore/grocery/';
-    const inputDOMSelectors = {
+    const input = {
         product: document.getElementById('product'),
         count: document.getElementById('count'),
         price: document.getElementById('price'),
     }
-    const otherDOMSelectors = {
+    const buttons = {
         addBtn: document.getElementById('add-product'),
         updateBtn: document.getElementById('update-product'),
         loadBtn: document.getElementById('load-product'),
-        productsContainer: document.getElementById('tbody'),
-        form: document.querySelector('.list'),
     }
+
+    const field = {
+        productsContainer: document.getElementById('tbody'),
+    }
+
     let currentProducts = [];
     let productToEdit = {};
 
-    otherDOMSelectors.loadBtn.addEventListener('click', loadAllProductsHandler);
-    otherDOMSelectors.updateBtn.addEventListener('click', updateProductHandler);
-    otherDOMSelectors.addBtn.addEventListener('click', addProductHandler);
+    buttons.loadBtn.addEventListener('click', loadProducts);
+    buttons.addBtn.addEventListener('click', addProduct);
+    buttons.updateBtn.addEventListener('click', updateProduct);
+    console.log(input);
+    console.log(buttons);
 
-    function loadAllProductsHandler(event) {
+    function loadProducts(event) {
         if (event) {
             event.preventDefault();
         }
+        field.productsContainer.innerHTML = '';
 
-        otherDOMSelectors.productsContainer.innerHTML = '';
         fetch(BASE_URL)
             .then((res) => res.json())
-            .then((allProductsRes) => {
-                currentProducts = Object.values(allProductsRes);
-                for (const { product, count, price, _id } of currentProducts) {
-                    const tableRow = createElement('tr', otherDOMSelectors.productsContainer);
-                    tableRow.id = _id;
+            .then((allProducts) => {
+                console.log(allProducts);
+                currentProducts = Object.values(allProducts);
+                for (const { product, count, price, _id} of currentProducts) {
+                    const tableRow = createElement('tr', field.productsContainer, null, null, _id);
                     createElement('td', tableRow, product, ['name']);
                     createElement('td', tableRow, count, ['count']);
                     createElement('td', tableRow, price, ['product-price']);
                     const buttonsTd = createElement('td', tableRow, null, ['btn']);
                     const updateBtn = createElement('button', buttonsTd, 'Update', ['update']);
                     const deleteBtn = createElement('button', buttonsTd, 'Delete', ['delete']);
-                    updateBtn.addEventListener('click', loadUpdateFormHandler);
-                    deleteBtn.addEventListener('click', deleteProductHandler);
+                    updateBtn.addEventListener('click', transferProductToInput);
+                    deleteBtn.addEventListener('click', deleteProduct);
                 }
-            });
-    }
+            })
 
-    function loadUpdateFormHandler() {
-        const id = this.parentNode.parentNode.id;
+        createElement('td', field.productsContainer, )
+    }
+    function transferProductToInput() {
+        const parent = this.parentNode.parentNode;
+        const id = parent.id;
         productToEdit = currentProducts.find((p) => p._id === id);
-        for (const key in inputDOMSelectors) {
-            inputDOMSelectors[key].value = productToEdit[key];
+        for (const key in input) {
+            input[key].value = productToEdit[key];
         }
-        otherDOMSelectors.addBtn.setAttribute('disabled', true);
-        otherDOMSelectors.updateBtn.removeAttribute('disabled');
+        buttons.addBtn.setAttribute('disabled', true);
+        buttons.updateBtn.removeAttribute('disabled');
     }
+    function addProduct(event) {
 
-    function updateProductHandler(event) {
+        if (event) {
+            event.preventDefault();
+        }
+
+        const { product, count, price } = input;
+
+        const payload = JSON.stringify({
+            product: product.value,
+            count: count.value,
+            price: price.value,
+        })
+
+        const httpHeaders = {
+            method: 'POST',
+            body: payload,
+        }
+
+        fetch(BASE_URL, httpHeaders)
+            .then(() => {
+                loadProducts();
+                clearInput();
+            }).catch((err) => {
+                console.log(err);
+        })
+
+    }
+    function updateProduct(event) {
         event.preventDefault();
-        const { product, count, price } = inputDOMSelectors;
+        const { product, count, price } = input;
         const payload = JSON.stringify({
             product: product.value,
             count: count.value,
@@ -69,51 +103,75 @@ function attachEvents() {
 
         fetch(`${BASE_URL}${productToEdit._id}`, httpHeaders)
             .then(() => {
-                loadAllProductsHandler();
-                otherDOMSelectors.addBtn.removeAttribute('disabled');
-                otherDOMSelectors.updateBtn.setAttribute('disabled', true);
-                otherDOMSelectors.form.reset();
+                loadProducts();
+                buttons.addBtn.removeAttribute('disabled');
+                buttons.updateBtn.setAttribute('disabled', true);
+                clearInput();
             })
             .catch((err) => {
                 console.error(err);
             })
     }
-
-    function addProductHandler(event) {
-        event.preventDefault();
-        const { product, count, price } = inputDOMSelectors;
-        const payload = JSON.stringify({
-            product: product.value,
-            count: count.value,
-            price: price.value
-        });
-        const httpHeaders = {
-            method: 'POST',
-            body: payload
-        };
-
-        fetch(BASE_URL, httpHeaders)
-            .then(() => {
-                loadAllProductsHandler();
-                otherDOMSelectors.form.reset();
-            })
-            .catch((err) => {
-                console.error(err);
-            })
-    }
-
-    function deleteProductHandler() {
-        const id = this.parentNode.parentNode.id;
+    function deleteProduct(event) {
+        const parent = event.currentTarget.parentNode.parentNode;
+        const id = parent.id;
+        console.log(id);
         const httpHeaders = {
             method: 'DELETE'
-        };
-
+        }
         fetch(`${BASE_URL}${id}`, httpHeaders)
-            .then(() => loadAllProductsHandler())
+            .then(() => {
+                loadProducts();
+            })
             .catch((err) => {
                 console.error(err);
             })
+
     }
+    function clearInput() {
+        Object.values(input).forEach((item) => {
+            item.value = '';
+        })
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     function createElement(type, parentNode, content, classes, id, attributes, useInnerHtml) {
         const htmlElement = document.createElement(type);
