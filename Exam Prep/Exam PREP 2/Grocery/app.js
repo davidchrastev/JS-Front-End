@@ -39,7 +39,7 @@ function attachEvents() {
                     const tableRow = createElement('tr', field.productsContainer, null, null, _id);
                     createElement('td', tableRow, product, ['name']);
                     createElement('td', tableRow, count, ['count']);
-                    createElement('td', tableRow, price, ['product-price']);
+                    createElement('td', tableRow, price, ['price']);
                     const buttonsTd = createElement('td', tableRow, null, ['btn']);
                     const updateBtn = createElement('button', buttonsTd, 'Update', ['update']);
                     const deleteBtn = createElement('button', buttonsTd, 'Delete', ['delete']);
@@ -48,7 +48,7 @@ function attachEvents() {
                 }
             })
 
-        createElement('td', field.productsContainer, )
+        createElement('td', field.productsContainer)
     }
     function transferProductToInput() {
         const parent = this.parentNode.parentNode;
