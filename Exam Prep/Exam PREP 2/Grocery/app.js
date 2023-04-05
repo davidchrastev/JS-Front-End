@@ -1,6 +1,7 @@
 function attachEvents() {
     const BASE_URL = 'http://localhost:3030/jsonstore/grocery/';
-    const input = {
+
+    const inputs = {
         product: document.getElementById('product'),
         count: document.getElementById('count'),
         price: document.getElementById('price'),
@@ -10,69 +11,57 @@ function attachEvents() {
         updateBtn: document.getElementById('update-product'),
         loadBtn: document.getElementById('load-product'),
     }
-
     const field = {
-        productsContainer: document.getElementById('tbody'),
+        productContainer: document.getElementById('tbody'),
     }
+    let currentTasks = [];
 
-    let currentProducts = [];
-    let productToEdit = {};
+    console.log(buttons);
 
     buttons.loadBtn.addEventListener('click', loadProducts);
     buttons.addBtn.addEventListener('click', addProduct);
-    buttons.updateBtn.addEventListener('click', updateProduct);
-    console.log(input);
-    console.log(buttons);
-
+    buttons.updateBtn.addEventListener('click', update);
     function loadProducts(event) {
         if (event) {
             event.preventDefault();
         }
-        field.productsContainer.innerHTML = '';
+
+        field.productContainer.innerHTML = '';
 
         fetch(BASE_URL)
             .then((res) => res.json())
             .then((allProducts) => {
-                console.log(allProducts);
-                currentProducts = Object.values(allProducts);
-                for (const { product, count, price, _id} of currentProducts) {
-                    const tableRow = createElement('tr', field.productsContainer, null, null, _id);
-                    createElement('td', tableRow, product, ['name']);
-                    createElement('td', tableRow, count, ['count']);
-                    createElement('td', tableRow, price, ['price']);
-                    const buttonsTd = createElement('td', tableRow, null, ['btn']);
-                    const updateBtn = createElement('button', buttonsTd, 'Update', ['update']);
-                    const deleteBtn = createElement('button', buttonsTd, 'Delete', ['delete']);
-                    updateBtn.addEventListener('click', transferProductToInput);
-                    deleteBtn.addEventListener('click', deleteProduct);
-                }
-            })
+                currentTasks = Object.values(allProducts);
+                console.log(currentTasks);
 
-        createElement('td', field.productsContainer)
-    }
-    function transferProductToInput() {
-        const parent = this.parentNode.parentNode;
-        const id = parent.id;
-        productToEdit = currentProducts.find((p) => p._id === id);
-        for (const key in input) {
-            input[key].value = productToEdit[key];
-        }
-        buttons.addBtn.setAttribute('disabled', true);
-        buttons.updateBtn.removeAttribute('disabled');
+                for (const {product, count, price, _id} of currentTasks) {
+                    const tr = createElement('tr', field.productContainer, null, null, _id);
+                    console.log(tr);
+                    createElement('td', tr, product);
+                    createElement('td', tr, count);
+                    createElement('td', tr, price);
+                    const btnTd = createElement('td', tr, null, ['btn']);
+                    const updateBTN = createElement('button', btnTd, 'Update', ['update']);
+                    const deleteBTN = createElement('button', btnTd, 'Delete', ['delete']);
+                    deleteBTN.addEventListener('click', deleteProduct);
+                    updateBTN.addEventListener('click', transferForm);
+                }
+
+                console.log(currentTasks);
+            })
     }
     function addProduct(event) {
+        event.preventDefault();
 
-        if (event) {
-            event.preventDefault();
-        }
-
-        const { product, count, price } = input;
+        const { product, count, price } = inputs;
 
         const payload = JSON.stringify({
             product: product.value,
             count: count.value,
             price: price.value,
-        })
+        });
+
+        console.log(payload);
 
         const httpHeaders = {
             method: 'POST',
@@ -83,34 +72,11 @@ function attachEvents() {
             .then(() => {
                 loadProducts();
                 clearInput();
-            }).catch((err) => {
-                console.log(err);
+            }).catch(err => {
+                console.error(err);
         })
 
-    }
-    function updateProduct(event) {
-        event.preventDefault();
-        const { product, count, price } = input;
-        const payload = JSON.stringify({
-            product: product.value,
-            count: count.value,
-            price: price.value
-        });
-        const httpHeaders = {
-            method: 'PATCH',
-            body: payload
-        }
 
-        fetch(`${BASE_URL}${productToEdit._id}`, httpHeaders)
-            .then(() => {
-                loadProducts();
-                buttons.addBtn.removeAttribute('disabled');
-                buttons.updateBtn.setAttribute('disabled', true);
-                clearInput();
-            })
-            .catch((err) => {
-                console.error(err);
-            })
     }
     function deleteProduct(event) {
         const parent = event.currentTarget.parentNode.parentNode;
@@ -126,23 +92,68 @@ function attachEvents() {
             .catch((err) => {
                 console.error(err);
             })
+    }
+
+    let productToEdit = {};
+    function transferForm(event) {
+        event.preventDefault();
+        const parent = event.currentTarget.parentNode.parentNode;
+        const id = parent.id;
+        const parentN = document.getElementById(id);
+
+        const name = parentN.children[0].innerHTML;
+        const count = parentN.children[1].innerHTML;
+        const price = parentN.children[2].innerHTML;
+
+        inputs.product.value = name;
+        inputs.count.value = count;
+        inputs.price.value = price;
+
+        productToEdit.name = name;
+        productToEdit.count = count;
+        productToEdit.price = price;
+        productToEdit.id = id;
+
+        console.log(productToEdit);
+
+        buttons.addBtn.setAttribute('disabled', true);
+        buttons.updateBtn.removeAttribute('disabled');
+    }
+    function update(event) {
+        event.preventDefault();
+
+
+        const { product, count, price } = inputs;
+
+        const payload = JSON.stringify({
+            product: product.value,
+            count: count.value,
+            price: price.value
+        });
+
+        const httpHeaders = {
+            method: 'PATCH',
+            body: payload
+        }
+
+
+        fetch(`${BASE_URL}${productToEdit.id}`, httpHeaders)
+            .then(() => {
+                loadProducts();
+                buttons.addBtn.removeAttribute('disabled');
+                buttons.updateBtn.setAttribute('disabled', true);
+                clearInput();
+            })
+            .catch((err) => {
+                console.error(err);
+            })
 
     }
     function clearInput() {
-        Object.values(input).forEach((item) => {
+        Object.values(inputs).forEach((item) => {
             item.value = '';
         })
     }
-
-
-
-
-
-
-
-
-
-
 
 
 
