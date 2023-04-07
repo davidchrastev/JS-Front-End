@@ -30,7 +30,7 @@ body {
 }
 
 .background-image {
-    background: url('../img/01.jpg');
+    background: url('01.jpg');
     background-position: 10% 35%;
     background-repeat: no-repeat;
     background-size: cover;
