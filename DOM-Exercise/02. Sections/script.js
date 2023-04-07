@@ -7,7 +7,7 @@ function create(words) {
     paragraphElement.style.display = "none";
     const divElement = document.createElement("div");
     divElement.appendChild(paragraphElement);
-    divElement.addEventListener("click", show);
+    divElement.addEventListener('click',show);
     contentElement.appendChild(divElement);
   });
   function show(e) {
