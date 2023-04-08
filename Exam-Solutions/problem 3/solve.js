@@ -20,6 +20,12 @@ function attachEvents() {
             event.preventDefault();
         }
 
+        container.toDo.children[1].innerHTML = '';
+        container.inProgress.children[1].innerHTML = '';
+        container.codeReview.children[1].innerHTML = '';
+        container.done.children[1].innerHTML = '';
+
+
         fetch(BASE_URL)
             .then((res) => res.json())
             .then((allProducts) => {
@@ -31,6 +37,7 @@ function attachEvents() {
                     switch (status) {
                         case 'ToDo':
                             const li = createElement('li', container.toDo.children[1],'', ['task'], _id);
+                            li.innerHTML = '';
                             createElement('h3', li, title);
                             createElement('p', li, description);
                             const moveToProgress = createElement('button', li, 'Move to In Progress');
@@ -38,6 +45,7 @@ function attachEvents() {
                             break;
                         case 'In Progress':
                             const liProgress = createElement('li', container.inProgress.children[1],'', ['task'], _id);
+                            liProgress.innerHTML = '';
                             createElement('h3', liProgress, title);
                             createElement('p', liProgress, description);
                             const moveToCodeReview = createElement('button', liProgress, 'Move to Code Review');
@@ -46,6 +54,7 @@ function attachEvents() {
                             break;
                         case 'Code Review':
                             const liReview = createElement('li', container.codeReview.children[1],'', ['task'], _id);
+                            liReview.innerHTML = '';
                             createElement('h3', liReview, title);
                             createElement('p', liReview, description);
                             const moveToDone = createElement('button', liReview, 'Move to Done');
@@ -53,6 +62,7 @@ function attachEvents() {
                             break
                         case 'Done':
                             const liDone = createElement('li', container.done.children[1],'', ['task'], _id);
+                            liDone.innerHTML = '';
                             createElement('h3', liDone, title);
                             createElement('p', liDone, description);
                             const close = createElement('button', liDone, 'Close');
