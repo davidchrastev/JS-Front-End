@@ -20,11 +20,9 @@ function attachEvents() {
             event.preventDefault();
         }
 
-        container.toDo.children[1].innerHTML = '';
-        container.inProgress.children[1].innerHTML = '';
-        container.codeReview.children[1].innerHTML = '';
-        container.done.children[1].innerHTML = '';
-
+        for (const key of container) {
+            container[key].children[1].innerHTML = '';
+        }
 
         fetch(BASE_URL)
             .then((res) => res.json())
