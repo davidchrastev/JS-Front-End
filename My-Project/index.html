@@ -1,47 +1,107 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>Welcome to My Task Site</title>
-  </head>
+<head>
+  <meta charset="UTF-8">
+  <title>Cryptocurrencies</title>
   <style>
-    body {
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
-}
+    table {
+      border-collapse: collapse;
+      margin: 0 auto;
+      font-family: Arial, sans-serif;
+      font-size: 16px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    /* Animation */
+    #button.loading::after {
+      content: "";
+      display: inline-block;
+      border-radius: 50%;
+      width: 0.8em;
+      height: 0.8em;
+      margin-left: 0.4em;
+      border: 0.15em solid #ccc;
+      border-top-color: #333;
+      animation: spin 1s infinite linear;
+    }
 
-.container {
-  width: 80%;
-  margin: auto;
-  text-align: center;
-}
-
-h1 {
-  font-size: 3rem;
-  margin-top: 3rem;
-}
-
-.btn {
-  display: inline-block;
-  padding: 1rem 2rem;
-  margin-top: 2rem;
-  font-size: 1.2rem;
-  color: #fff;
-  background-color: #007bff;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.btn:hover {
-  background-color: #0056b3;
-}
-
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
   </style>
-  <body>
-    <h1>Hello!</h1>
-    <p>Welcome to My Task Site.</p>
-    <button onclick="window.location.href='login.html'">Login</button>
-    <button onclick="window.location.href='register.html'">Register</button>
-  </body>
+</head>
+<body>
+<h1>Cryptocurrencies</h1>
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Symbol</th>
+    <th>Name</th>
+    <th>Rank</th>
+    <th>Price USD</th>
+    <th>Percent Change 24H</th>
+    <th>Percent Change 1H</th>
+    <th>Percent Change 7D</th>
+    <th>Price BTC</th>
+    <th>Market Cap USD</th>
+    <th>Volume 24H</th>
+    <th>Volume 24H (Avg)</th>
+    <th>Circulating Supply</th>
+    <th>Total Supply</th>
+    <th>Max Supply</th>
+  </tr>
+  </thead>
+  <tbody id="data">
+  </tbody>
+  <button id="button" type="submit">GET</button>
+</table>
+
+<script>
+  const button = document.getElementById('button');
+  button.addEventListener('click',load);
+
+  let cryptos = [];
+
+  function load(event) {
+    button.classList.add('loading');
+    fetch('https://api.coinlore.net/api/tickers/')
+            .then(response => response.json())
+            .then(data => {
+              const tableBody = document.getElementById('data');
+              data.data.forEach(currency => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+              <td>${currency.id}</td>
+              <td>${currency.symbol}</td>
+              <td>${currency.name}</td>
+              <td>${currency.rank}</td>
+              <td>${currency.price_usd}</td>
+              <td>${currency.percent_change_24h}</td>
+              <td>${currency.percent_change_1h}</td>
+              <td>${currency.percent_change_7d}</td>
+              <td>${currency.price_btc}</td>
+              <td>${currency.market_cap_usd}</td>
+              <td>${currency.volume24}</td>
+              <td>${currency.volume24a}</td>
+              <td>${currency.csupply}</td>
+              <td>${currency.tsupply}</td>
+              <td>${currency.msupply}</td>
+            `;
+                tableBody.appendChild(row);
+              });
+            })
+            .catch(error => console.error(error));
+  }
+
+
+
+</script>
+</body>
 </html>
